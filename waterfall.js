@@ -150,7 +150,7 @@ angular.module('waterfall', ['ngSanitize']).directive('waterfall', function() {
 					for(key in flow){
 						index[key] = {
 							id: key,
-							html: flow[key].html || '',
+							html: flow[key].html || (flow[key].title ? flow[key].title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : ''),
 							class: flow[key].class || '',
 							visible: !!flow[key].visible,
 							next: Array.isArray(flow[key].next) ? flow[key].next.slice() : [],

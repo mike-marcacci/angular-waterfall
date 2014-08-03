@@ -3,7 +3,7 @@ angular.module('demo', ['waterfall','ui.ace']).controller('controller', function
 	$scope.flow = {
 		"2e360108d95f3cda2e7467d3": {
 			class: 'active',
-			html: "Application",
+			title: "<b>Application</b>",
 			visible: true,
 			next: [
 				"9dcd650c0544dd3dc82fd87a"
