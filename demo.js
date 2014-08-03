@@ -1,6 +1,4 @@
-angular.module('flow-plot')
-
-.controller('controller', function($scope){
+angular.module('flow-plot').controller('controller', function($scope){
 
 	$scope.flow = {
 		"2e360108d95f3cda2e7467d3": {
