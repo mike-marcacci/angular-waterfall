@@ -1,17 +1,10 @@
-angular.module('flow-plot', []).directive('flowPlot', function() {
+angular.module('waterfall', []).directive('waterfall', function() {
 	return {
 		restrict: 'A',
 		template: ''
-			+'<svg ng-attr-width="{{width}}" ng-attr-height="{{height}}">\n'
+			+'<svg class="waterfall" ng-attr-width="{{width}}" ng-attr-height="{{height}}">\n'
 			+'	<g ng-attr-transform="translate({{options.node.width / -2 + options.node.margin.x}}, {{height - options.node.height}})">\n'
-			+'		<g ng-repeat="node in nodes" ng-class="node.class" ng-attr-transform="translate({{node.x}}, {{node.y}})">\n'
-			+'			<rect\n'
-			+'				ng-attr-width="{{options.node.width}}"\n'
-			+'				ng-attr-height="{{options.node.height}}"\n'
-			+'				ng-attr-rx="{{options.node.radius}}"\n'
-			+'				ng-attr-ry="{{options.node.radius}}"\n'
-			+'				ng-attr-fill="{{options.node.fill}}"\n'
-			+'			/>\n'
+			+'		<g ng-repeat="node in nodes" ng-class="[\'node\', node.class]" ng-attr-transform="translate({{node.x}}, {{node.y}})">\n'
 			+'			<foreignObject\n'
 			+'				ng-attr-width="{{options.node.width}}"\n'
 			+'				ng-attr-height="{{options.node.height}}"\n'
@@ -19,15 +12,9 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 			+'				ng-attr-ry="{{options.node.radius}}"\n'
 			+'			>\n'
 			+'				<div ng-attr-style="\n'
-			+'					text-align: center;\n'
 			+'					width: {{options.node.width}}px;\n'
-			+'					line-height: {{options.node.height}}px;\n'
-			+'					color: {{options.node.color}};\n'
-			+'					white-space: nowrap;\n'
-			+'					text-overflow: ellipsis;\n'
-			+'					overflow: hidden;\n'
-			+'				"\n'
-			+'				>{{node.title}}</div>\n'
+			+'					height: {{options.node.height}}px;\n'
+			+'				">{{node.title}}</div>\n'
 			+'			</foreignObject>\n'
 			+'		</g>\n'
 			+'		<path\n'
@@ -39,13 +26,13 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 			+'				Q {{link.q2[0][0]}} {{link.q2[0][1]}},\n'
 			+'					{{link.q2[1][0]}} {{link.q2[1][1]}}\n'
 			+'				T {{link.target.x}} {{link.target.y}}"\n'
-			+'			ng-attr-stroke="{{options.link.stroke}}"\n'
-			+'			ng-attr-stroke-width="{{options.link.strokeWidth}}"\n'
-			+'			fill="transparent"\n'
 			+'		/>\n'
 			+'	</g>\n'
 			+'</svg>\n',
-		scope: false,
+		require: 'ngModel',
+		scope: {
+			flow: '=ngModel'
+		},
 		controller: function($scope, $element, $attrs, $parse) {
 
 			// find the distances of all upstream path
@@ -54,7 +41,7 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 					return node.upstream;
 
 				// if this is a head node
-				if(node.previous.length == 0)
+				if(node.previous.length === 0)
 					return node.upstream = [0];
 
 				node.upstream = [];
@@ -72,13 +59,13 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 					return node.downstream;
 
 				// if this is a tail node
-				if(node.next.length == 0)
+				if(node.next.length === 0)
 					return node.downstream = [0];
 
 				node.downstream = [];
 				node.next.forEach(function(next){
 					downstream(next).forEach(function(distance){
-						if(node.downstream.indexOf(distance) == -1)
+						if(node.downstream.indexOf(distance) === -1)
 							node.downstream.push(distance+1);
 					})
 				});
@@ -107,9 +94,9 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 
 				node.next.sort(function(a,b){
 					// put tail nodes on top
-					if(a.scoreDown == 0)
+					if(a.scoreDown === 0)
 						return 1;
-					if(b.scoreDown == 0)
+					if(b.scoreDown === 0)
 						return -1;
 
 					// upstream sort
@@ -120,9 +107,9 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 
 				node.previous.sort(function(a,b){
 					// put head nodes on top
-					if(a.scoreUp == 0)
+					if(a.scoreUp === 0)
 						return 1;
-					if(b.scoreUp == 0)
+					if(b.scoreUp === 0)
 						return -1;
 
 					// downstream sort
@@ -135,7 +122,7 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 				$scope.height = Math.max($scope.height, -node.y);
 			};
 
-			$attrs.$observe('flowPlotOptions', function(options) {
+			$attrs.$observe('waterfallOptions', function(options) {
 				options = $parse(options)($scope);
 
 				$scope.options = {
@@ -143,23 +130,14 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 					node: {
 						width: options && options.node && typeof options.node.width !== 'undefined' ? options.node.width : 180,
 						height: options && options.node && typeof options.node.height !== 'undefined' ? options.node.height : 30,
-						radius: options && options.node && typeof options.node.radius !== 'undefined' ? options.node.radius : 6,
-						fill: options && options.node && typeof options.node.fill !== 'undefined' ? options.node.fill : '#428bca',
-						color: options && options.node && typeof options.node.color !== 'undefined' ? options.node.color : '#fff',
 						margin: {
 							x: options && options.node && options.node.margin && typeof options.node.margin.x !== 'undefined' ? options.node.margin.x : 20,
 							y: options && options.node && options.node.margin && typeof options.node.margin.y !== 'undefined' ? options.node.margin.y : 10
 						}
-					},
-					link: {
-						stroke: options && options.node && typeof options.link.stroke !== 'undefined' ? options.link.stroke : 'rgb(196, 196, 196)',
-						strokeWidth: options && options.node && typeof options.link.strokeWidth !== 'undefined' ? options.link.strokeWidth : 2
 					}
 				}
 
-				$attrs.$observe('flowPlot', function(flow) {
-					flow = $parse(flow)($scope);
-
+				$scope.$watch('flow', function(flow) {
 					var index = {};
 					$scope.nodes = [];
 					$scope.links = [];
@@ -174,7 +152,7 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 							title: flow[key].title || '',
 							class: flow[key].class || '',
 							visible: !!flow[key].visible,
-							next: flow[key].next || [],
+							next: Array.isArray(flow[key].next) ? flow[key].next.slice() : [],
 							previous: []
 						};
 					};
@@ -182,11 +160,12 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 					if(Object.keys(index).length === 0)
 						return;
 
-					// reverse-relate nodes
+					// relate nodes
 					for(key in index){
 						var node = index[key];
 						node.next.forEach(function(id, i, list){
 							// build the relationships
+
 							var next = list[i] = index[id];
 							if(next.previous)
 								next.previous.push(node);
@@ -200,7 +179,6 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 
 					// remove hidden nodes
 					if($scope.options.hide){
-						console.log('asdf')
 						for(key in index){
 							var node = index[key];
 
@@ -211,7 +189,7 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 
 									// add next nodes to previous nodes
 									node.previous.forEach(function(previous){
-										if(previous.next.indexOf(next) == -1){
+										if(previous.next.indexOf(next) === -1){
 											previous.next.push(next)
 										}
 									})
@@ -223,7 +201,7 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 
 									// add previous nodes to next nodes
 									node.next.forEach(function(next){
-										if(next.previous.indexOf(previous) == -1)
+										if(next.previous.indexOf(previous) === -1)
 											next.previous.push(previous)
 									})
 								});
@@ -283,7 +261,7 @@ angular.module('flow-plot', []).directive('flowPlot', function() {
 					// pad the canvas
 					$scope.width += $scope.options.node.width;
 					$scope.height += $scope.options.node.height;
-				});
+				}, true);
 			});
 		}
 	};

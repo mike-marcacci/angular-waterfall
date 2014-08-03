@@ -1,4 +1,4 @@
-angular.module('flow-plot').controller('controller', function($scope){
+angular.module('waterfall').controller('controller', function($scope){
 
 	$scope.flow = {
 		"2e360108d95f3cda2e7467d3": {
@@ -97,5 +97,33 @@ angular.module('flow-plot').controller('controller', function($scope){
 			next: []
 		}
 	};
+
+	$scope.options = {
+		hide: true,
+		node: {
+			width: 180,
+			height: 30,
+			margin: {
+				x: 20,
+				y: 10
+			}
+		}
+	}
+
+	$scope.flowString = JSON.stringify($scope.flow, null, 2);
+	$scope.optionsString = JSON.stringify($scope.options, null, 2);
+
+	$scope.$watch('flowString', function(flowString){
+		try {
+			$scope.flow = JSON.parse(flowString);
+		} catch(e){}
+	});
+
+	$scope.$watch('optionsString', function(optionsString){
+		try {
+			$scope.options = JSON.parse(optionsString);
+		} catch(e){}
+	});
+
 
 });

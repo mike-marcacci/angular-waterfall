@@ -4,9 +4,32 @@
 		<script src="flow.js"></script>
 		<script src="demo.js"></script>
 	</head>
-	<body ng-app="flow-plot">
+	<body ng-app="waterfall">
 		<div ng-controller="controller">
-			<div flow-plot="flow" flow-plot-options="{hide: false}"></div>
+			<div waterfall="{{opts}}" ng-model="flow"></div>
+
+			<style type="text/css">
+				svg.waterfall div {
+					background: #428bca;
+					border-radius: 4px;
+					color: #fff;
+					line-height: 30px;
+					overflow: hidden;
+					text-align: center;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+
+				svg.waterfall path {
+					fill: transparent;
+					stroke-width: 2px;
+					stroke: #c5c5c5;
+				}
+			</style>
+
+			<textarea ng-model="optionsString"></textarea>
+			<textarea ng-model="flowString"></textarea>
+			<button ng-click="something()"></button>
 		</div>
 	</body>
 </html>

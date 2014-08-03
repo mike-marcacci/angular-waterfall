@@ -1,2 +1,2 @@
-angular-flow-plot
+angular-waterfall
 =================

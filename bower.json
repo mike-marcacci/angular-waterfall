@@ -1,0 +1,30 @@
+{
+  "name": "angular-waterfall",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mike-marcacci/angular-waterfall",
+  "authors": [
+    "Mike Marcacci <mike.marcacci@gmail.com>"
+  ],
+  "description": "Builds a nice interactive flow chart / sports bracket from simple parent/child relationships.",
+  "main": "waterfall.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "flow",
+    "brackets",
+    "d3",
+    "flow",
+    "chart",
+    "diagram",
+    "svg"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
