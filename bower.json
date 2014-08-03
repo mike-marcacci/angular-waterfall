@@ -1,12 +1,15 @@
 {
   "name": "angular-waterfall",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "homepage": "https://github.com/mike-marcacci/angular-waterfall",
   "authors": [
     "Mike Marcacci <mike.marcacci@gmail.com>"
   ],
   "description": "Builds a nice interactive flow chart / sports bracket from simple parent/child relationships.",
-  "main": ["waterfall.js", "waterfall.css"],
+  "main": [
+    "waterfall.js",
+    "waterfall.css"
+  ],
   "moduleType": [
     "globals"
   ],
