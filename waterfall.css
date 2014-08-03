@@ -1,0 +1,20 @@
+svg.waterfall div {
+	background-color: #428bca;
+	border-radius: 4px;
+	color: #fff;
+	line-height: 30px;
+	overflow: hidden;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+svg.waterfall div:hover {
+	background-color: #3690DF;
+}
+
+svg.waterfall path {
+	fill: transparent;
+	stroke-width: 2px;
+	stroke: #c5c5c5;
+}

@@ -6,7 +6,7 @@
     "Mike Marcacci <mike.marcacci@gmail.com>"
   ],
   "description": "Builds a nice interactive flow chart / sports bracket from simple parent/child relationships.",
-  "main": "waterfall.js",
+  "main": ["waterfall.js", "waterfall.css"],
   "moduleType": [
     "globals"
   ],
@@ -26,5 +26,9 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "angular": "1.3.x",
+    "angular-sanitize": "1.3.x"
+  }
 }

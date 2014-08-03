@@ -1,10 +1,10 @@
-angular.module('waterfall', []).directive('waterfall', function() {
+angular.module('waterfall', ['ngSanitize']).directive('waterfall', function() {
 	return {
 		restrict: 'A',
 		template: ''
 			+'<svg class="waterfall" ng-attr-width="{{width}}" ng-attr-height="{{height}}">\n'
 			+'	<g ng-attr-transform="translate({{options.node.width / -2 + options.node.margin.x}}, {{height - options.node.height}})">\n'
-			+'		<g ng-repeat="node in nodes" ng-class="[\'node\', node.class]" ng-attr-transform="translate({{node.x}}, {{node.y}})">\n'
+			+'		<g ng-repeat="node in nodes" ng-class="node.class" ng-attr-transform="translate({{node.x}}, {{node.y}})" ng-click="options.node.onclick(node)">\n'
 			+'			<foreignObject\n'
 			+'				ng-attr-width="{{options.node.width}}"\n'
 			+'				ng-attr-height="{{options.node.height}}"\n'
@@ -14,7 +14,7 @@ angular.module('waterfall', []).directive('waterfall', function() {
 			+'				<div ng-attr-style="\n'
 			+'					width: {{options.node.width}}px;\n'
 			+'					height: {{options.node.height}}px;\n'
-			+'				">{{node.title}}</div>\n'
+			+'				" ng-bind-html="node.html"></div>\n'
 			+'			</foreignObject>\n'
 			+'		</g>\n'
 			+'		<path\n'
@@ -31,7 +31,8 @@ angular.module('waterfall', []).directive('waterfall', function() {
 			+'</svg>\n',
 		require: 'ngModel',
 		scope: {
-			flow: '=ngModel'
+			flow: '=ngModel',
+			opts: '=waterfall'
 		},
 		controller: function($scope, $element, $attrs, $parse) {
 
@@ -122,14 +123,14 @@ angular.module('waterfall', []).directive('waterfall', function() {
 				$scope.height = Math.max($scope.height, -node.y);
 			};
 
-			$attrs.$observe('waterfallOptions', function(options) {
-				options = $parse(options)($scope);
+			$scope.$watch('opts', function(options) {
 
 				$scope.options = {
 					hide: options && typeof options.hide !== 'undefined' ? options.hide : true,
 					node: {
 						width: options && options.node && typeof options.node.width !== 'undefined' ? options.node.width : 180,
 						height: options && options.node && typeof options.node.height !== 'undefined' ? options.node.height : 30,
+						onclick: options && options.node && typeof options.node.onclick !== 'undefined' ? options.node.onclick : null,
 						margin: {
 							x: options && options.node && options.node.margin && typeof options.node.margin.x !== 'undefined' ? options.node.margin.x : 20,
 							y: options && options.node && options.node.margin && typeof options.node.margin.y !== 'undefined' ? options.node.margin.y : 10
@@ -149,7 +150,7 @@ angular.module('waterfall', []).directive('waterfall', function() {
 					for(key in flow){
 						index[key] = {
 							id: key,
-							title: flow[key].title || '',
+							html: flow[key].html || '',
 							class: flow[key].class || '',
 							visible: !!flow[key].visible,
 							next: Array.isArray(flow[key].next) ? flow[key].next.slice() : [],

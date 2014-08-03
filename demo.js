@@ -1,23 +1,23 @@
-angular.module('waterfall').controller('controller', function($scope){
+angular.module('demo', ['waterfall','ui.ace']).controller('controller', function($scope){
 
 	$scope.flow = {
 		"2e360108d95f3cda2e7467d3": {
 			class: 'active',
-			title: "Application",
+			html: "Application",
 			visible: true,
 			next: [
 				"9dcd650c0544dd3dc82fd87a"
 			]
 		},
 		"9dcd650c0544dd3dc82fd87a": {
-			title: "Contact Reviewers",
+			html: "Contact Reviewers",
 			visible: false,
 			next: [
 				"e882df32df91f89f9a8324dc",
 			]
 		},
 		"e882df32df91f89f9a8324dc": {
-			title: "Approval",
+			html: "Approval",
 			visible: true,
 			next: [
 				"01c4ce41a83eab1aa8e37508",
@@ -25,19 +25,19 @@ angular.module('waterfall').controller('controller', function($scope){
 			]
 		},
 		"01c4ce41a83eab1aa8e37508": {
-			title: "External Review",
+			html: "<b>External</b> Review",
 			visible: true,
 			next: [
 				"7a8b9b622827dced9060dd67"
 			]
 		},
 		"2cb9719ab7b2ccecf228e90b": {
-			title: "Rejected",
+			html: "Rejected",
 			visible: true,
 			next: []
 		},
 		"7a8b9b622827dced9060dd67": {
-			title: "Board Review",
+			html: "Board Review",
 			visible: true,
 			next: [
 				"ebcf121a5107f9e0be547d5d",
@@ -46,33 +46,33 @@ angular.module('waterfall').controller('controller', function($scope){
 			]
 		},
 		"73d6a11b3c13e868bb9fb284": {
-			title: "Rejected",
+			html: "Rejected",
 			visible: true,
 			next: []
 		},
 		"ebcf121a5107f9e0be547d5d": {
-			title: "Funds Awarded",
+			html: "Funds Awarded",
 			visible: true,
 			next: [
 				"aac2d5537a8e52a0d811cab2"
 			]
 		},
 		"ddf1573d5943978fc47c2e86": {
-			title: "Review & Resubmit",
+			html: "Review & Resubmit",
 			visible: true,
 			next: [
 				"9366681c7e013ab4c205ba95"
 			]
 		},
 		"9366681c7e013ab4c205ba95": {
-			title: "Set Board Meeting",
+			html: "Set Board Meeting",
 			visible: false,
 			next: [
 				"c3920332b5814bc317656fd4"
 			]
 		},
 		"c3920332b5814bc317656fd4": {
-			title: "Board Re-Review",
+			html: "Board Re-Review",
 			visible: true,
 			next: [
 				"ebcf121a5107f9e0be547d5d",
@@ -80,50 +80,55 @@ angular.module('waterfall').controller('controller', function($scope){
 			]
 		},
 		"a6118a4991705414ce20ec0e": {
-			title: "Rejected",
+			html: "Rejected",
 			visible: true,
 			next: []
 		},
 		"aac2d5537a8e52a0d811cab2": {
-			title: "Progress Reports",
+			html: "Progress Reports",
 			visible: true,
 			next: [
 				"92db6fbaa744c0270cf01b1f"
 			]
 		},
 		"92db6fbaa744c0270cf01b1f": {
-			title: "Final Report",
+			html: "Final Report",
 			visible: true,
 			next: []
 		}
 	};
 
-	$scope.options = {
-		hide: true,
-		node: {
-			width: 180,
-			height: 30,
-			margin: {
-				x: 20,
-				y: 10
-			}
-		}
-	}
+	$scope.options = {}
 
-	$scope.flowString = JSON.stringify($scope.flow, null, 2);
-	$scope.optionsString = JSON.stringify($scope.options, null, 2);
+	$scope.flowString = '$scope.flow = ' + JSON.stringify($scope.flow, null, 2);
+	$scope.optionsString = '$scope.options = {\n'
+		+'	"hide": true,\n'
+		+'	"node": {\n'
+		+'		"width": 180,\n'
+		+'		"height": 30,\n'
+		+'		"margin": {\n'
+		+'			"x": 20,\n'
+		+'			"y": 10\n'
+		+'		},\n'
+		+'		"onclick": function(node){\n'
+		+'			console.log(node);\n'
+		+'		}\n'
+		+'	}\n'
+		+'}';
 
 	$scope.$watch('flowString', function(flowString){
 		try {
-			$scope.flow = JSON.parse(flowString);
+			eval(flowString);
 		} catch(e){}
 	});
 
 	$scope.$watch('optionsString', function(optionsString){
 		try {
-			$scope.options = JSON.parse(optionsString);
+			eval(optionsString);
 		} catch(e){}
 	});
+
+	$scope.test = JSON.stringify($scope.flow, null, 2);
 
 
 });
