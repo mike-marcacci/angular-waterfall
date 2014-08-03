@@ -7,6 +7,7 @@ svg.waterfall div {
 	text-align: center;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	cursor: default;
 }
 
 svg.waterfall div:hover {
