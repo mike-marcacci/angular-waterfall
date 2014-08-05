@@ -10,6 +10,10 @@ svg.waterfall div {
 	cursor: default;
 }
 
+svg.waterfall g.active div {
+	background-color: #294C68;
+}
+
 svg.waterfall div:hover {
 	background-color: #3690DF;
 }
