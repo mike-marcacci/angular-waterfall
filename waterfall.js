@@ -46,7 +46,26 @@ angular.module('waterfall', ['ngSanitize'])
 		node.scoreDown = node.downstream.reduce(function(a,b){return a+b;});
 	}
 
-	return function(flow, options) {
+	function buildOptions(options) {
+		return {
+			hide: options && typeof options.hide !== 'undefined' ? options.hide : true,
+			node: {
+				width: options && options.node && typeof options.node.width !== 'undefined' ? options.node.width : 180,
+				height: options && options.node && typeof options.node.height !== 'undefined' ? options.node.height : 30,
+				onclick: options && options.node && typeof options.node.onclick !== 'undefined' ? options.node.onclick : null,
+				margin: {
+					x: options && options.node && options.node.margin && typeof options.node.margin.x !== 'undefined' ? options.node.margin.x : 20,
+					y: options && options.node && options.node.margin && typeof options.node.margin.y !== 'undefined' ? options.node.margin.y : 10
+				}
+			}
+		};
+	}
+
+	var service = function(flow, options) {
+
+		// default options
+		options = options || buildOptions({});
+
 		var index = {}, key;
 		var nodes = [];
 
@@ -136,7 +155,9 @@ angular.module('waterfall', ['ngSanitize'])
 		// calculateY(nodes[0], 0);
 
 		return nodes;
-	}
+	}; service.buildOptions = buildOptions;
+
+	return service;
 })
 
 .directive('waterfall', ['waterfall', function(waterfall) {
@@ -221,29 +242,14 @@ angular.module('waterfall', ['ngSanitize'])
 				$scope.height = Math.max($scope.height, -node.y);
 			}
 
-			// set options
-			$scope.$watch('opts', function(options) {
-				$scope.options = {
-					hide: options && typeof options.hide !== 'undefined' ? options.hide : true,
-					node: {
-						width: options && options.node && typeof options.node.width !== 'undefined' ? options.node.width : 180,
-						height: options && options.node && typeof options.node.height !== 'undefined' ? options.node.height : 30,
-						onclick: options && options.node && typeof options.node.onclick !== 'undefined' ? options.node.onclick : null,
-						margin: {
-							x: options && options.node && options.node.margin && typeof options.node.margin.x !== 'undefined' ? options.node.margin.x : 20,
-							y: options && options.node && options.node.margin && typeof options.node.margin.y !== 'undefined' ? options.node.margin.y : 10
-						}
-					}
-				}
-			});
-
 			// build the waterfall
-			$scope.$watch('flow', function(flow) {
-
-				if(!$scope.options)
+			$scope.$watch('[opts, flow]', function(results) {
+				if(!results[0] || !results[1])
 					return;
 
-				$scope.nodes = waterfall(flow, $scope.options);
+				$scope.options = waterfall.buildOptions(results[0]);
+
+				$scope.nodes = waterfall(results[1], $scope.options);
 				$scope.links = [];
 
 				$scope.width = 0;
