@@ -25,7 +25,7 @@ angular.module('demo', ['waterfall','ui.ace']).controller('controller', function
 			]
 		},
 		"01c4ce41a83eab1aa8e37508": {
-			html: "<b>External</b> Review",
+			html: "<b><i>External</i></b> Review",
 			visible: true,
 			next: [
 				"7a8b9b622827dced9060dd67"
