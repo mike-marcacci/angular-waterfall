@@ -1,4 +1,4 @@
-angular.module('waterfall', ['ngSanitize'])
+angular.module('waterfall', ['ngSanitize', 'ngHtmlCompile'])
 
 .factory('waterfall', function(){
 	'use strict';
@@ -176,7 +176,7 @@ angular.module('waterfall', ['ngSanitize'])
 			+'				<div ng-attr-style="\n'
 			+'					width: {{options.node.width}}px;\n'
 			+'					height: {{options.node.height}}px;\n'
-			+'				" ng-bind-html="node.html"></div>\n'
+			+'				" ng-html-compile="node.html"></div>\n'
 			+'			</foreignObject>\n'
 			+'		</g>\n'
 			+'		<path\n'
